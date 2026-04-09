@@ -1,144 +1,116 @@
-# Data Pipeline for Statistical Analysis
+# 📊 Crypto Market Analysis Pipeline (Assignment 4)
 
 ## 📌 Project Overview
 
-This project builds a data pipeline using a medallion architecture (Bronze → Silver → Gold). The pipeline collects cryptocurrency market data and sentiment data, cleans and transforms it, and produces a final dataset ready for statistical analysis.
+This project extends Assignment 3 by enhancing the data pipeline and building an
+interactive Streamlit dashboard for statistical analysis.
 
-This dataset will be used in Part 2 to perform hypothesis testing and build a Streamlit application.
+The pipeline follows a **medallion architecture**:
 
----
+| Layer | Description |
+|-------|-------------|
+| 🥉 Bronze | Raw API data |
+| 🥈 Silver | Cleaned datasets |
+| 🥇 Gold | Final dataset for analysis |
 
-## 🏗️ Architecture
-
-Bronze → Silver → Gold
-
-* **Bronze Layer**: Raw API data stored as JSON
-* **Silver Layer**: Cleaned and structured data (CSV)
-* **Gold Layer**: Final joined dataset with engineered features
-
----
-
-## 📡 APIs Used
-
-1. Binance API
-
-   * Provides daily Bitcoin price and volume data
-
-2. Alternative.me Fear & Greed Index
-
-   * Provides daily market sentiment data
+In Assignment 4, an additional data source (**holidays**) is introduced to improve analysis.
 
 ---
 
-## ⚙️ How to Run the Project
+## 🔄 Pipeline Overview
+Public APIs → Bronze → Silver → Gold → Streamlit App → Statistical Analysis
 
-### 1. Create virtual environment
+text
 
-```
-python -m venv venv
-venv\Scripts\activate
-```
-
-### 2. Install dependencies
-
-```
-pip install -r requirements.txt
-```
-
-### 3. Run ingestion scripts
-
-```
-python ingest/ingest_binance.py
-python ingest/ingest_fear_greed.py
-```
-
-Run both scripts at least twice to generate multiple Bronze files.
+- **Extract** → Binance & Fear & Greed APIs
+- **Transform** → Cleaning and feature engineering
+- **Load** → Final dataset for analysis
 
 ---
 
-### 4. Run transformation scripts
+## 📡 Data Sources
 
-```
-python transform/transform_binance.py
-python transform/transform_fear_greed.py
-```
-
----
-
-### 5. Create Gold dataset
-
-```
-python transform/create_gold.py
-```
+- **Binance API** — Bitcoin price and volume data
+- **Fear & Greed Index API** — Market sentiment indicator
+- **Holidays** *(NEW)* — Generated using the `python-holidays` library; used to analyze behavior on holidays vs. non-holidays
 
 ---
 
-## 📊 Final Dataset (Gold Layer)
+## ⚙️ Feature Engineering
 
-The final dataset contains:
+New variables added:
 
-* date
-* btc_close
-* btc_volume
-* fear_greed_value
-* fear_greed_label
-* btc_daily_return
-* positive_return
+| Variable | Description |
+|-------------------|-------------------------------|
+| `btc_daily_return` | Daily return |
+| `positive_return` | Binary outcome |
+| `is_holiday` | Holiday indicator *(new)* |
+| `high_volatility` | High movement days |
 
 ---
 
-## 📈 Feature Engineering
+## 📊 Statistical Analysis
 
-* **btc_daily_return**: Daily percentage return of Bitcoin
-* **positive_return**: Binary variable (1 = positive return, 0 = negative)
+The Streamlit app includes the following tests, each with a **hypothesis, assumptions, decision, and interpretation**:
 
-These features are used for statistical tests such as:
+- One-sample t-test
+- Two-sample t-test
+- Chi-square test
+- Variance comparison
+- Correlation analysis
 
-* One-sample t-test
-* Two-sample t-test
-* Proportion z-test
+---
+
+## 🖥️ Streamlit Dashboard
+
+To run the app:
+
+```bash
+streamlit run app/streamlit_app.py
+```
+
+The dashboard includes:
+
+- Data preview
+- Visualizations
+- Statistical tests
+- Insights and limitations
+
+---
+
+## 📁 Project Structure
+📦 project-root
+├── data/
+│ ├── bronze/
+│ ├── silver/
+│ └── gold/
+├── ingest/
+├── transform/
+├── app/
+├── README.md
+├── analysis_preview.md
+├── assignment4_analysis_plan.md
+└── assignment4_reflection.md
+
+text
 
 ---
 
 ## 🤖 AI Usage
 
-I used ChatGPT to:
+ChatGPT was used to:
 
-* Generate initial API request code
-* Help structure the data pipeline
-* Assist with debugging errors (timestamp conversion issue)
+- Assist with pipeline design
+- Debug issues (timestamp conversion, Streamlit errors)
+- Help implement statistical tests
+- Improve dashboard UI and explanations
 
-I verified:
-
-* Data joins were correct
-* Data types were properly converted
-* Output dataset matched expected structure
-
----
-
-## 📁 Project Structure
-
-```
-data-pipeline-assignment/
-│
-├── data/
-│   ├── bronze/
-│   ├── silver/
-│   └── gold/
-│
-├── ingest/
-├── transform/
-├── notebooks/
-│
-├── README.md
-├── analysis_preview.md
-├── requirements.txt
-├── .env.example
-├── .gitignore
-```
+> All outputs were reviewed and verified for correctness.
 
 ---
 
 ## 🎯 Conclusion
 
-This pipeline successfully transforms raw API data into an analysis-ready dataset, enabling statistical testing and visualization in the next stage of the project.
+This project demonstrates how raw data can be transformed into meaningful insights
+through data engineering and statistical analysis. The addition of holidays provides
+a new dimension for understanding market behavior.
